@@ -13,9 +13,11 @@ use Illuminate\Support\Collection;
 use App\Libs\HasAccessControl;
 use App\Libs\AccessControl;
 
+use App\Models\Helper\Uuid;
+
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasAccessControl;
+    use HasApiTokens, HasFactory, Notifiable, HasAccessControl, Uuid;
 
     /**
      * The attributes that are mass assignable.

@@ -14,8 +14,8 @@ class CreatePeopleTable extends Migration
     public function up()
     {
         Schema::create('people', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('category_id');
+            $table->uuid('id')->primary();
+            $table->uuid('category_id');
             $table->string('ref_no');
             $table->string('name');
             $table->string('email')->unique()->nullable();

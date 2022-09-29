@@ -27,6 +27,7 @@ class DummyCategorySeeder extends Seeder
             $label = 'Dummy Semester ' . $i;
 
             $data[] = [
+                'id' => Str::uuid(),
                 'label' => $label,
                 'name' => Str::slug($label),
                 'group_by' => 'semesters',

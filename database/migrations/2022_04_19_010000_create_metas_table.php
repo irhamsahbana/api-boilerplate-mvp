@@ -14,8 +14,8 @@ class CreateMetasTable extends Migration
     public function up()
     {
         Schema::create('metas', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('fK_id');
+            $table->uuid('id')->primary();
+            $table->uuid('fK_id');
             $table->string('table_name');
             $table->string('key');
             $table->string('value');

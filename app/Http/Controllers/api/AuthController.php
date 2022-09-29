@@ -3,33 +3,48 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Libs\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
     public function attempt(Request $request)
     {
-        $credentials = $request->validate([
+        $fields = [
+            'username' => $request->username,
+            'password' => $request->password
+        ];
+
+        $rules = [
             'username' => ['required'],
-            'password' => ['required'],
-        ]);
+            'password' => ['required']
+        ];
 
-        if (Auth::attempt($credentials)) {
-            // $request->session()->regenerate();
+        $validator = Validator::make($fields, $rules);
+        if ($validator->fails())
+            return Response::json(null, $validator->errors(), 422);
 
-            // return redirect()->route('app');
-            
+
+       if (Auth::attempt($fields)) {
+            $user = Auth::user();
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return Response::json([
+                'token' => $token,
+                'user' => $user,
+            ], 'Login success', 200);
         }
 
-        return response()->json(['message' => 'Unauthorized'], 401);
+        return Response::json(null, 'Invalid login credentials.', 401);
     }
 
     public function logout(Request $request)
     {
-        Auth::logout();
+        $request->user()->currentAccessToken()->delete();
 
-        $request->session()->invalidate();
-
-        return redirect()->route('auth.login');
+        return Response::json(null, 'Logout success', 200);
     }
 }

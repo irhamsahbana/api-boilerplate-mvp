@@ -5,8 +5,8 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Libs\Response;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -24,27 +24,29 @@ class AuthController extends Controller
         ];
 
         $validator = Validator::make($fields, $rules);
+        $response = new Response();
         if ($validator->fails())
-            return Response::json(null, $validator->errors(), 422);
+            return $response->json(null, $validator->errors(), HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
 
 
        if (Auth::attempt($fields)) {
             $user = Auth::user();
             $token = $user->createToken('auth_token')->plainTextToken;
 
-            return Response::json([
+            return$response->json([
                 'token' => $token,
                 'user' => $user,
-            ], 'Login success', 200);
+            ], 'Login success');
         }
 
-        return Response::json(null, 'Invalid login credentials.', 401);
+        return $response->json(null, 'Invalid login credentials.', HttpResponse::HTTP_UNAUTHORIZED);
     }
 
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
 
-        return Response::json(null, 'Logout success', 200);
+        $response = new Response();
+        return $response->json(null, 'Logout success');
     }
 }

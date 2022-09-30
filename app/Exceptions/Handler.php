@@ -52,13 +52,21 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Throwable $exception)
+    public function render($request, Throwable $e)
     {
-        if  (!($exception instanceof NotFoundHttpException)) {
-            return Response::json(null, $exception->getMessage(), $exception->getStatusCode(), $exception->getTrace());
+        if  ($request->expectsJson()) {
+            $response = new Response();
+            return $response->json(
+                null,
+                $e->getStatusCode() === 404 ? "Endpoint Not Found" : $e->getMessage(),
+                $e->getStatusCode(),
+                get_class($e),
+                $e->getFile(),
+                $e->getLine(),
+                $e->getTrace()
+            );
         }
 
-
-        // return parent::render($request, $exception);
+        return parent::render($request, $e);
     }
 }

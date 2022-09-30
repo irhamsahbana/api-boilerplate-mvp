@@ -25,7 +25,3 @@ Route::middleware('auth:sanctum')->group(function() {
 });
 
 Route::post("/auth/login", [AuthController::class, 'attempt']);
-
-Route::fallback(function() {
-    return Response::json(null, "Endpoint Not Found", 404);
-});

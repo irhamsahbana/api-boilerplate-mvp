@@ -2,8 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Api\AuthController;
-use App\Libs\Response;
+use App\Http\Controllers\Api\{
+    AuthController,
+    GetCitiesController
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -16,13 +18,10 @@ use App\Libs\Response;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
 Route::middleware('auth:sanctum')->group(function() {
     Route::get('auth/logout', [AuthController::class, 'logout']);
     Route::get('auth/logout-all-devices', [AuthController::class, 'logoutAll']);
 });
 
 Route::post("auth/login", [AuthController::class, 'attempt']);
+// Route::get('seed-provinces-cities', [GetCitiesController::class, 'ProvincesAndCities']);

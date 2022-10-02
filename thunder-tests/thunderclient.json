@@ -71,5 +71,25 @@
       "bearer": "97672aaa-8cc3-456b-bb61-093b5acd6efb|6qXpF6iuJRBzwE0g2IzN3smhXFZl9E5FUxl3c6xC"
     },
     "tests": []
+  },
+  {
+    "_id": "93f75f5b-9827-468a-a447-36a95098859e",
+    "colId": "32ff7434-8c1d-48b8-bb71-cf846c651163",
+    "containerId": "",
+    "name": "get cities",
+    "url": "{{base_url}}/cities",
+    "method": "GET",
+    "sortNum": 40000,
+    "created": "2022-10-02T08:42:16.915Z",
+    "modified": "2022-10-02T08:52:59.036Z",
+    "headers": [
+      {
+        "name": "Accept",
+        "value": "*/*",
+        "isDisabled": true
+      }
+    ],
+    "params": [],
+    "tests": []
   }
 ]

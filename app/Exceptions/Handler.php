@@ -4,8 +4,6 @@ namespace App\Exceptions;
 
 use App\Libs\Response;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 
@@ -54,19 +52,35 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
-        if  ($request->expectsJson()) {
-            $response = new Response();
-            return $response->json(
-                null,
-                $e->getStatusCode() === 404 ? "Endpoint Not Found" : $e->getMessage(),
-                $e->getStatusCode(),
-                get_class($e),
-                $e->getFile(),
-                $e->getLine(),
-                $e->getTrace()
-            );
+        if (!$request->expectsJson()) {
+            return parent::render($request, $e);
         }
 
-        return parent::render($request, $e);
+        $statusCode = 500;
+        $msg = 'Internal Server Error';
+
+        if ($e instanceof \Illuminate\Auth\AuthenticationException) {
+            $statusCode = 401;
+            $msg = 'Unauthenticated';
+        }
+
+        if ($e instanceof \Symfony\Component\HttpKernel\Exception\HttpException) {
+            $statusCode = $e->getStatusCode();
+            $msg = $e->getMessage();
+
+            if ($statusCode === 404 && $e->getMessage() === '')
+                $msg = 'Endpoint Not Found';
+        }
+
+        $response = new Response();
+        return $response->json(
+            null,
+            $msg,
+            $statusCode,
+            get_class($e),
+            $e->getFile(),
+            $e->getLine(),
+            $e->getTrace()
+        );
     }
 }

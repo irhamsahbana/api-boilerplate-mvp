@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Libs\Response;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+
+use App\Libs\Response;
 
 class AuthController extends Controller
 {
@@ -48,5 +49,13 @@ class AuthController extends Controller
 
         $response = new Response();
         return $response->json(null, 'Logout success');
+    }
+
+    public function logoutAll(Request $request)
+    {
+        $request->user()->tokens()->delete();
+
+        $response = new Response();
+        return $response->json(null, 'Logout all success');
     }
 }

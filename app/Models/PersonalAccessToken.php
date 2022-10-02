@@ -3,10 +3,9 @@
 namespace App\Models;
 
 use Laravel\Sanctum\PersonalAccessToken as SanctumPersonalAccessToken;
-
-use App\Models\Helper\Uuid;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class PersonalAccessToken extends SanctumPersonalAccessToken
 {
-    use Uuid;
+    use HasUuids;
 }

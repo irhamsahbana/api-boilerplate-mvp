@@ -21,7 +21,8 @@ use App\Libs\Response;
 // });
 
 Route::middleware('auth:sanctum')->group(function() {
-
+    Route::get('auth/logout', [AuthController::class, 'logout']);
+    Route::get('auth/logout-all-devices', [AuthController::class, 'logoutAll']);
 });
 
-Route::post("/auth/login", [AuthController::class, 'attempt']);
+Route::post("auth/login", [AuthController::class, 'attempt']);

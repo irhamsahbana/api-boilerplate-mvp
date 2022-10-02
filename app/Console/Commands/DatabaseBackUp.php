@@ -38,8 +38,6 @@ class DatabaseBackUp extends Command
      */
     public function handle()
     {
-        $filename = "backup-" . now()->format('Y-m-d-H-i-s') . ".sql";
-
         // Create backup folder and set permission if not exist.
         $storageAt = storage_path() . "/app/backup/";
         if(!File::exists($storageAt))
@@ -51,11 +49,19 @@ class DatabaseBackUp extends Command
         $host = env('DB_HOST');
         $db = env('DB_DATABASE');
 
+        $filename ="backup-{$db}-" . now()->format('Y-m-d-H-i-s') . ".sql";
+
         // $command = "".env('DB_DUMP_PATH', 'mysqldump')." --user=" . env('DB_USERNAME') ." --password=" . env('DB_PASSWORD') . " --host=" . env('DB_HOST') . " " . env('DB_DATABASE') . "  | gzip > " . $storageAt . $filename;
 
         $command = "$dbDumpPath --user='$user' --password='$password' --host='$host' $db > {$storageAt}{$filename}";
         $returnVar = NULL;
         $output = NULL;
         exec($command, $output, $returnVar);
+
+        if(!$returnVar) {
+            $this->info("Backup for database {$db} created successfully in {$storageAt}{$filename}");
+        } else {
+            $this->error("Database backup failed.");
+        }
     }
 }

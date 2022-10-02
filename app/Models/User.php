@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Collection;
@@ -15,7 +17,7 @@ use App\Libs\AccessControl;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasAccessControl;
+    use HasApiTokens, HasFactory, Notifiable, HasAccessControl, HasUuids, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -36,6 +38,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'email_verified_at',
     ];
 
     /**

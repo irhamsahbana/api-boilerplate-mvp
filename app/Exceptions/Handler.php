@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
+use App\Libs\Response;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+
 
 class Handler extends ExceptionHandler
 {
@@ -46,5 +48,39 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Throwable $e)
+    {
+        if (!$request->expectsJson()) {
+            return parent::render($request, $e);
+        }
+
+        $statusCode = 500;
+        $msg = 'Internal Server Error';
+
+        if ($e instanceof \Illuminate\Auth\AuthenticationException) {
+            $statusCode = 401;
+            $msg = 'Unauthenticated';
+        }
+
+        if ($e instanceof \Symfony\Component\HttpKernel\Exception\HttpException) {
+            $statusCode = $e->getStatusCode();
+            $msg = $e->getMessage();
+
+            if ($statusCode === 404 && $e->getMessage() === '')
+                $msg = 'Endpoint Not Found';
+        }
+
+        $response = new Response();
+        return $response->json(
+            null,
+            $msg,
+            $statusCode,
+            get_class($e),
+            $e->getFile(),
+            $e->getLine(),
+            $e->getTrace()
+        );
     }
 }

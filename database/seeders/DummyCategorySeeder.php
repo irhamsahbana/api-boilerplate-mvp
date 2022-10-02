@@ -26,14 +26,15 @@ class DummyCategorySeeder extends Seeder
         foreach (range(1, 5) as $i) {
             $label = 'Dummy Semester ' . $i;
 
-            $data[] = [
+            $data = [
                 'label' => $label,
                 'name' => Str::slug($label),
                 'group_by' => 'semesters',
                 'created_at' => now(),
             ];
+
+            Category::create($data);
         }
 
-        Category::insert($data);
     }
 }

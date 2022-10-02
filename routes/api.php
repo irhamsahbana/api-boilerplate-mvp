@@ -1,7 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\Api\AuthController;
+use App\Libs\Response;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,5 +21,8 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::middleware('auth:sanctum')->group(function() {
-
+    Route::get('auth/logout', [AuthController::class, 'logout']);
+    Route::get('auth/logout-all-devices', [AuthController::class, 'logoutAll']);
 });
+
+Route::post("auth/login", [AuthController::class, 'attempt']);
